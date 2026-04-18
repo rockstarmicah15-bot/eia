@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EIA Voice — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #070B12;
+  --surface: #0C1220;
+  --card: rgba(255,255,255,0.028);
+  --card-border: rgba(255,255,255,0.06);
+  --violet: #7C5CFC;
+  --violet-dim: rgba(124,92,252,0.15);
+  --violet-glow: rgba(124,92,252,0.08);
+  --cyan: #22D3EE;
+  --amber: #F59E0B;
+  --white: #EEF2FF;
+  --muted: rgba(238,242,255,0.45);
+  --muted2: rgba(238,242,255,0.22);
+  --muted3: rgba(238,242,255,0.10);
+  --red: #F43F5E;
+  --green: #10B981;
+  --ff-display: 'Syne', sans-serif;
+  --ff-body: 'DM Sans', sans-serif;
+  --r: 16px;
+  --r-sm: 10px;
+}
+
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:var(--ff-body);-webkit-font-smoothing:antialiased;overflow:hidden}
+
+/* ANIMATED MESH BG */
+.mesh{position:fixed;inset:0;z-index:0;pointer-events:none}
+.mesh-orb{position:absolute;border-radius:50%;filter:blur(100px);animation:drift 20s ease-in-out infinite}
+.orb1{width:600px;height:600px;top:-200px;left:-100px;background:radial-gradient(circle,rgba(124,92,252,0.12),transparent 65%);animation-delay:0s}
+.orb2{width:500px;height:500px;bottom:-180px;right:-80px;background:radial-gradient(circle,rgba(34,211,238,0.08),transparent 65%);animation-delay:-8s}
+.orb3{width:350px;height:350px;top:45%;left:45%;background:radial-gradient(circle,rgba(124,92,252,0.05),transparent 65%);animation-delay:-14s}
+@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.05)}66%{transform:translate(-20px,35px) scale(0.97)}}
+
+.noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px 180px}
+
+.grid-lines{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(124,92,252,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.025) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 65% 65% at 50% 50%,black,transparent)}
+
+/* LAYOUT */
+.page{position:relative;z-index:2;min-height:100vh;display:grid;grid-template-columns:1fr 500px}
+
+/* LEFT HERO */
+.hero{display:flex;flex-direction:column;justify-content:space-between;padding:2.5rem 2.5rem 2.5rem 3.5rem;opacity:0;animation:fadeLeft .9s cubic-bezier(.22,1,.36,1) .1s forwards}
+@keyframes fadeLeft{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+
+.logo{display:flex;align-items:center;gap:12px}
+.logo-gem{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--violet) 0%,#4F38D0 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(124,92,252,.4),0 8px 32px rgba(124,92,252,.3);position:relative;overflow:hidden;flex-shrink:0}
+.logo-gem::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.22) 0%,transparent 55%)}
+.logo-gem svg{width:20px;height:20px;position:relative;z-index:1}
+.logo-wordmark{font-family:var(--ff-display);font-size:19px;font-weight:800;letter-spacing:-.02em}
+.logo-tag{padding:3px 10px;border-radius:100px;font-size:10px;font-weight:600;letter-spacing:.08em;background:rgba(124,92,252,.12);border:1px solid rgba(124,92,252,.25);color:var(--violet);text-transform:uppercase}
+
+.hero-center{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem 0}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:100px;width:fit-content;background:rgba(124,92,252,.07);border:1px solid rgba(124,92,252,.18);margin-bottom:2rem}
+.eyebrow-pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
+.eyebrow span{font-size:12px;font-weight:500;color:rgba(238,242,255,.7);letter-spacing:.03em}
+
+.hero-h1{font-family:var(--ff-display);font-size:clamp(44px,5vw,72px);font-weight:800;line-height:.96;letter-spacing:-.04em;margin-bottom:1.5rem}
+.hero-h1 .line1{display:block;color:var(--white)}
+.hero-h1 .line2{display:block;background:linear-gradient(90deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-h1 .line3{display:block;color:var(--muted);font-weight:300;font-style:italic;font-size:.68em;margin-top:.25em;letter-spacing:-.01em}
+
+.hero-desc{font-size:14.5px;line-height:1.85;color:var(--muted);max-width:380px;margin-bottom:3rem}
+
+/* Feature panels */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;border-radius:20px;overflow:hidden;background:var(--card-border);max-width:440px}
+.feat-row{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;background:rgba(7,11,18,.96);transition:background .2s;position:relative;overflow:hidden;cursor:default}
+.feat-row::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,92,252,.04),transparent);opacity:0;transition:opacity .25s}
+.feat-row:hover{background:rgba(124,92,252,.05)}
+.feat-row:hover::after{opacity:1}
+.fi{width:32px;height:32px;border-radius:9px;flex-shrink:0;background:rgba(124,92,252,.08);border:1px solid rgba(124,92,252,.15);display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:2px}
+.feat-row:hover .fi{background:rgba(124,92,252,.15);border-color:rgba(124,92,252,.3)}
+.fi svg{width:14px;height:14px}
+.ft{font-size:12.5px;font-weight:600;color:rgba(238,242,255,.88);margin-bottom:3px;font-family:var(--ff-display)}
+.fd{font-size:11px;color:var(--muted2);line-height:1.5}
+
+.stats-row{display:flex;gap:2.5rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--card-border)}
+.stat-n{font-family:var(--ff-display);font-size:22px;font-weight:800;letter-spacing:-.04em}
+.stat-n em{color:var(--violet);font-style:normal}
+.stat-l{font-size:10px;color:var(--muted2);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+
+/* RIGHT FORM */
+.form-side{display:flex;align-items:center;justify-content:center;padding:2rem;border-left:1px solid var(--card-border);background:linear-gradient(180deg,rgba(124,92,252,.025) 0%,transparent 100%);opacity:0;animation:fadeRight .9s cubic-bezier(.22,1,.36,1) .2s forwards}
+@keyframes fadeRight{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+
+.form-box{width:100%;max-width:400px}
+
+.form-top{text-align:center;margin-bottom:2rem}
+.form-icon-wrap{width:52px;height:52px;border-radius:16px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem}
+.form-icon-wrap svg{width:22px;height:22px}
+.form-title{font-family:var(--ff-display);font-size:24px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.form-sub{font-size:13px;color:var(--muted)}
+.form-sub a{color:var(--violet);text-decoration:none;font-weight:500}
+.form-sub a:hover{text-decoration:underline}
+
+/* Fields */
+.fl-field{position:relative;margin-bottom:1rem}
+.fl-field input{
+  width:100%;height:52px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--r-sm);color:var(--white);font-family:var(--ff-body);font-size:14px;
+  padding:18px 16px 6px 46px;outline:none;transition:all .2s;caret-color:var(--violet);
+}
+.fl-field input::placeholder{opacity:0}
+.fl-field input:focus{border-color:rgba(124,92,252,.5);background:rgba(124,92,252,.05);box-shadow:0 0 0 3px rgba(124,92,252,.08)}
+.fl-field label{position:absolute;left:46px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--muted2);pointer-events:none;transition:all .18s;transform-origin:left center}
+.fl-field input:focus ~ label,.fl-field input:not(:placeholder-shown) ~ label{top:14px;transform:translateY(0) scale(.8);color:var(--violet)}
+.fl-field .field-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted3);pointer-events:none;transition:color .2s}
+.fl-field input:focus ~ label ~ .field-icon,.fl-field input:not(:placeholder-shown) ~ label ~ .field-icon{color:var(--violet)}
+.fl-field .field-icon svg{width:16px;height:16px}
+
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted3);display:flex;padding:6px;border-radius:6px;transition:all .15s}
+.pw-eye:hover{color:var(--muted);background:rgba(255,255,255,.05)}
+.pw-eye svg{width:16px;height:16px}
+
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.fl-field.shake{animation:shake .35s cubic-bezier(.36,.07,.19,.97)}
+.fl-field.error input{border-color:rgba(244,63,94,.4)!important;background:rgba(244,63,94,.04)!important}
+
+.form-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+.toggle-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle-check input{display:none}
+.check-ui{width:18px;height:18px;border-radius:5px;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);transition:all .15s;flex-shrink:0}
+.toggle-check input:checked ~ .check-ui{background:var(--violet);border-color:var(--violet)}
+.check-ui svg{width:10px;height:10px;opacity:0;transition:opacity .15s}
+.toggle-check input:checked ~ .check-ui svg{opacity:1}
+.check-lbl{font-size:12.5px;color:var(--muted)}
+.forgot{font-size:12.5px;color:var(--violet);text-decoration:none}
+.forgot:hover{text-decoration:underline}
+
+.btn-cta{
+  width:100%;height:52px;border:none;border-radius:var(--r-sm);cursor:pointer;
+  background:linear-gradient(135deg,var(--violet) 0%,#4F38D0 100%);color:white;
+  font-family:var(--ff-display);font-size:15px;font-weight:700;letter-spacing:.01em;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:all .2s;box-shadow:0 4px 24px rgba(124,92,252,.35);margin-bottom:1.2rem;
+  position:relative;overflow:hidden;
+}
+.btn-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent);pointer-events:none}
+.btn-cta:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 32px rgba(124,92,252,.45)}
+.btn-cta:active:not(:disabled){transform:translateY(0)}
+.btn-cta:disabled{opacity:.65;cursor:not-allowed}
+.btn-cta svg{width:17px;height:17px;flex-shrink:0}
+
+.or-divider{text-align:center;position:relative;margin:1rem 0}
+.or-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--card-border)}
+.or-divider span{position:relative;background:var(--bg);padding:0 12px;font-size:11px;color:var(--muted3);letter-spacing:.06em;text-transform:uppercase}
+
+.google-btn{
+  width:100%;height:48px;border-radius:var(--r-sm);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:var(--white);font-family:var(--ff-body);font-size:14px;font-weight:500;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-bottom:1.2rem;
+}
+.google-btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.google-btn svg{width:18px;height:18px;flex-shrink:0}
+
+.info-notice{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:rgba(124,92,252,.06);border:1px solid rgba(124,92,252,.14);border-radius:var(--r-sm);margin-bottom:1.5rem}
+.notice-dot{width:7px;height:7px;border-radius:50%;background:var(--violet);flex-shrink:0;margin-top:4px;box-shadow:0 0 8px var(--violet)}
+.info-notice p{font-size:12px;color:var(--muted2);line-height:1.65}
+.info-notice p strong{color:var(--white);font-weight:500}
+
+.form-foot{font-size:11px;color:var(--muted3);text-align:center;line-height:1.8}
+.form-foot a{color:var(--muted2);text-decoration:none}
+.form-foot a:hover{color:var(--violet)}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);z-index:9999;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;background:rgba(10,15,25,.95);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px);font-size:13.5px;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.error{border-color:rgba(244,63,94,.3)}
+.toast.error svg{color:var(--red)}
+.toast.success{border-color:rgba(16,185,129,.3)}
+.toast.success svg{color:var(--green)}
+.toast svg{width:15px;height:15px;flex-shrink:0}
+
+/* Loading state fix */
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="mesh">
+  <div class="mesh-orb orb1"></div>
+  <div class="mesh-orb orb2"></div>
+  <div class="mesh-orb orb3"></div>
+</div>
+<div class="noise"></div>
+<div class="grid-lines"></div>
+
+<div class="page">
+
+  <!-- HERO LEFT -->
+  <div class="hero">
+    <div class="logo">
+      <div class="logo-gem">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+      <span class="logo-wordmark">EIA Voice</span>
+      <span class="logo-tag">Live</span>
+    </div>
+
+    <div class="hero-center">
+      <div class="eyebrow">
+        <span class="eyebrow-pulse"></span>
+        <span>All systems operational</span>
+      </div>
+
+      <h1 class="hero-h1">
+        <span class="line1">Where every</span>
+        <span class="line2">voice matters.</span>
+        <span class="line3">freely. safely. privately.</span>
+      </h1>
+
+      <p class="hero-desc">
+        The private social platform built for Empower International Academy. Connect, create, and express — with complete privacy at every step.
+      </p>
+
+      <div class="feat-grid">
+        <div class="feat-row">
+          <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div><div class="ft">E2E Encrypted</div><div class="fd">Military-grade privacy</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><div class="ft">Social Network</div><div class="fd">Follow, DM, react</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div><div class="ft">Reels & Live</div><div class="fd">Share in real time</div></div>
+        </div>
+        <div class="feat-row">
+          <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div><div class="ft">Realtime Chat</div><div class="fd">Instant messaging</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div><div class="stat-n">12<em>K+</em></div><div class="stat-l">Active users</div></div>
+      <div><div class="stat-n">99<em>%</em></div><div class="stat-l">Uptime</div></div>
+      <div><div class="stat-n">0<em>ms</em></div><div class="stat-l">Data retained</div></div>
+      <div><div class="stat-n">256<em>-bit</em></div><div class="stat-l">Encryption</div></div>
+    </div>
+  </div>
+
+  <!-- FORM RIGHT -->
+  <div class="form-side">
+    <div class="form-box">
+      <div class="form-top">
+        <div class="form-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="form-title">Welcome back</div>
+        <div class="form-sub">No account? <a href="eia-signup.html">Create one →</a></div>
+      </div>
+
+      <div class="fl-field" id="f-email">
+        <input type="email" id="email" placeholder="Email address" autocomplete="email">
+        <label for="email">Email address</label>
+        <span class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></span>
+      </div>
+
+      <div class="fl-field" id="f-pw">
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password" style="padding-right:46px">
+        <label for="password">Password</label>
+        <span class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <button class="pw-eye" id="eyeBtn" type="button">
+          <svg id="eyeSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <div class="form-meta">
+        <label class="toggle-check">
+          <input type="checkbox" id="remember">
+          <span class="check-ui"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg></span>
+          <span class="check-lbl">Stay signed in</span>
+        </label>
+        <a class="forgot" href="#" id="forgotBtn">Forgot password?</a>
+      </div>
+
+      <button class="btn-cta" id="signinBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Sign In to EIA Voice
+      </button>
+
+      <div class="or-divider"><span>or continue with</span></div>
+
+      <button class="google-btn" id="googleBtn">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign in with Google
+      </button>
+
+      <div class="info-notice">
+        <span class="notice-dot"></span>
+        <p><strong>Need an account?</strong> Visit the <a href="eia-signup.html" style="color:var(--violet);text-decoration:none">signup page</a> to create your EIA Voice profile and join the community.</p>
+      </div>
+
+      <div class="form-foot">
+        Secured by EIA Voice &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a><br>
+        <span style="margin-top:5px;display:block">© 2026 Empower International Academy</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="toastMsg">Please fill in all fields</span>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAxpioIrzLaVeUDu_GhrDzVaHoDSsMOwNM",
+  authDomain: "chess-chat-3904e.firebaseapp.com",
+  databaseURL: "https://chess-chat-3904e-default-rtdb.firebaseio.com",
+  projectId: "chess-chat-3904e",
+  storageBucket: "chess-chat-3904e.firebasestorage.app",
+  messagingSenderId: "1083259768144",
+  appId: "1:1083259768144:web:5ad88bd12136f3f64ab055",
+  measurementId: "G-M39CBB746W"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+function showToast(msg, type='error'){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toastMsg');
+  m.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function shake(id){
+  const el = document.getElementById(id);
+  el.classList.add('shake');
+  el.classList.add('error');
+  setTimeout(() => { el.classList.remove('shake'); el.classList.remove('error'); }, 700);
+}
+
+// Password toggle
+const eyeBtn = document.getElementById('eyeBtn');
+const pwInput = document.getElementById('password');
+let shown = false;
+eyeBtn.addEventListener('click', () => {
+  shown = !shown;
+  pwInput.type = shown ? 'text' : 'password';
+  document.getElementById('eyeSvg').innerHTML = shown
+    ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+    : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+});
+
+// Sign In
+document.getElementById('signinBtn').addEventListener('click', async function(){
+  const email = document.getElementById('email').value.trim();
+  const pw = document.getElementById('password').value;
+  const remember = document.getElementById('remember').checked;
+
+  if(!email){ shake('f-email'); showToast('Please enter your email'); return; }
+  if(!pw){ shake('f-pw'); showToast('Please enter your password'); return; }
+
+  const btn = this;
+  btn.innerHTML = `<svg style="animation:spin .8s linear infinite" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity=".2"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> Signing in…`;
+  btn.disabled = true;
+
+  try {
+    const persistence = remember ? browserLocalPersistence : browserSessionPersistence;
+    await setPersistence(auth, persistence);
+    await signInWithEmailAndPassword(auth, email, pw);
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Welcome back!`;
+    btn.style.background = 'linear-gradient(135deg,#10B981,#059669)';
+    btn.style.boxShadow = '0 4px 24px rgba(16,185,129,.35)';
+    showToast('Signed in! Redirecting…', 'success');
+    setTimeout(() => window.location.href = 'eia-chat.html', 1200);
+  } catch(e) {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In to EIA Voice`;
+    btn.disabled = false;
+    const msg = e.code === 'auth/invalid-credential' ? 'Invalid email or password' :
+                e.code === 'auth/too-many-requests' ? 'Too many attempts. Try again later.' :
+                e.code === 'auth/user-not-found' ? 'No account found with this email' :
+                'Sign in failed. Please try again.';
+    showToast(msg);
+  }
+});
+
+// Google Sign In
+document.getElementById('googleBtn').addEventListener('click', async function(){
+  try {
+    await signInWithPopup(auth, googleProvider);
+    showToast('Signed in with Google!', 'success');
+    setTimeout(() => window.location.href = 'eia-chat.html', 1000);
+  } catch(e) {
+    if(e.code !== 'auth/popup-closed-by-user') showToast('Google sign-in failed. Try again.');
+  }
+});
+
+// Forgot password
+document.getElementById('forgotBtn').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if(!email){ shake('f-email'); showToast('Enter your email first'); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast('Password reset email sent!', 'success');
+  } catch(e) {
+    showToast('Could not send reset email. Check the address.');
+  }
+});
+</script>
+</body>
+</html>
